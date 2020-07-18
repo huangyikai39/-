@@ -1,0 +1,65 @@
+C#企业级开发技术练习18答题卡
+
+班级：   信管一班  
+姓名：   黄奕凯 
+学号：   20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+
+
+namespace 作业
+{
+ 
+    
+    class Program
+    {
+      public class Works
+        {
+            public string wname;
+            public string category;
+            public int score;
+        }
+
+
+
+
+
+        static void Main(string[] args)
+        {
+            var works = new List<Works>()
+           {
+               new Works{wname="挑食宝宝变形记",category="教育随笔",score=89},
+                new Works{wname="美丽的剪纸",category="手工艺术",score=95},
+                 new Works{wname="幻想小屋",category="手工艺术",score=97},
+                  new Works{wname="庆国庆歌咏会",category="活动方案",score=96},
+
+           };
+            var orderWorks = works.OrderByDescending(p => p.score);
+            Console.WriteLine("参赛作品按分数降序如下：");
+            foreach (var work in orderWorks)
+            {
+                Console.WriteLine($"作品名称：{work.wname},类别:{work.category},得分：{work.score}");
+            }
+            Console.WriteLine("最终评选结果如下：");
+            void wonWorks(string type)
+            {
+                var find = orderWorks.FirstOrDefault(p => p.score >= 90 && p.category == type);
+                if (find == null)
+                    Console.WriteLine($"{type}没有入围作品");
+                else
+                    Console.WriteLine($"{type}入围作品：{find.wname}");
+            }
+            wonWorks("手工艺术"); wonWorks("活动方案"); wonWorks("教育随笔");
+        }
+    }
+}
+
+
+

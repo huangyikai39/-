@@ -1,0 +1,134 @@
+C#企业级开发技术练习17答题卡
+
+班级：    信管一班 
+姓名：    黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Dynamic;
+using System.Collections.Generic;
+
+
+namespace 作业
+{
+ 
+    
+    class Program
+    {
+        
+         
+        static void Main(string[] args)
+        {
+
+            dynamic book = new ExpandoObject(); 
+              book.name=  "SQL";
+            book.price = 40.23m;
+            IDictionary<string,object> bookDT = book;
+            Console.WriteLine($"书名：{ bookDT["name"]}");
+            Console.WriteLine($"价格：{bookDT["price"]}");
+        }
+    }
+}
+
+（二）
+using System;
+using System.Dynamic;
+using System.Collections.Generic;
+
+
+namespace 作业
+{
+ 
+    
+    class Program
+    {
+        public class Sale: DynamicObject
+        {
+            public DateTime salesTime { get { return DateTime.Now; } }
+            public dynamic price { get; set; }
+            IDictionary<string, object> other = new Dictionary<string, object>();
+            public override bool TryGetMember(GetMemberBinder binder, out object result)
+            {
+                return other.TryGetValue(binder.Name, out result);
+            }
+            public override bool TrySetMember(SetMemberBinder binder, object value)
+            {
+                return other.TryAdd(binder.Name, value);
+            }
+            public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
+            {
+                result = (int)args[0] * price;
+                return true;
+            }
+
+        }
+       
+
+        static void Main(string[] args)
+        {
+            dynamic dv = new Sale();
+            dv.price = 2999.5;dv.name = "OPPO";dv.n = 10;
+            var amount = dv(dv.n);
+            Console.WriteLine($"销售{dv.name}手机{dv.n}台，单价{dv.price}元，合计{amount}元");
+
+        }
+    }
+}
+
+（三）
+
+using System;
+
+
+
+namespace 作业
+{
+ 
+    
+    class Program
+    {
+        public class Person
+        {
+            public string Name { get; }
+            public string Sex { get; }
+            public Person(string name, string sex)
+            {
+                Name = name; Sex = sex;
+            }
+        }
+            public class Teacher : Person
+            {
+              public Teacher(string name,string sex) : base(name, sex) { }
+            }
+            public class Worker : Person
+            {
+                public Worker(string name,string sex) : base(name, sex) { }
+            }
+         
+       
+       
+       
+
+        static void Main(string[] args)
+        {
+           void recruit<T>(string name,string sex)
+            {
+                var type = typeof(Person);
+                object person = Activator.CreateInstance(type, name, sex);
+                Console.Write($"Recruiting{type.Name}:");
+                foreach (var p in type.GetProperties())
+                {
+                    Console.Write($"{p.Name}:{p.GetValue(person)},");
+                }
+                Console.WriteLine();
+            }
+            recruit <Teacher>("zhang", "male"); recruit<Teacher>("liu", "female");
+            recruit <Worker>("zhao", "male"); recruit<Worker>("wang", "female");
+        }
+    }
+}
+
+

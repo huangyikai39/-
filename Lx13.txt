@@ -1,0 +1,114 @@
+C#企业级开发技术练习13答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+ var scores = new List<(string name, decimal cs, decimal sql)>{
+                ("zhang",80,92),
+                ("liu",57,62),
+                ("wang",61,72),
+                ("zhao",95,96)
+            };
+            decimal s1 = 0, s2 = 0;
+            Thread sumCS = new Thread(t =>
+              {
+                  foreach (var score in scores)
+                  {
+                      s1 += score.cs;
+                      Thread.Sleep((int)t);
+                  }
+              });
+            Thread sumSQL = new Thread(t =>
+             {
+                 foreach (var score in scores)
+                 {
+                     s2 += score.sql;
+                     Thread.Sleep((int)t);
+                 }
+             });
+            sumCS.Start(20);
+            sumSQL.Start(8);
+            sumSQL.Join();
+            Thread.Sleep(1000);
+            decimal avg1 = s1 / scores.Count, avg2 = s2 / scores.Count;
+            C
+
+（二）
+static void Main(string[] args)
+        {
+            AutoResetEvent aeFile = new AutoResetEvent(false);
+            string file = @"D:\homeDir\homeThStm.txt";
+            Thread writeTh = new Thread(() =>
+              {
+                  using (StreamWriter sw = new StreamWriter(file))
+                  {
+                      sw.WriteLine("一帆风顺吉星到"); Thread.Sleep(100);
+                      sw.WriteLine("万事如意福临门"); Thread.Sleep(100);
+                     
+                  }
+                  aeFile.Set();
+              });
+            Thread readTh = new Thread(() => { 
+                  aeFile.WaitOne();
+                  using(StreamReader sr =new StreamReader(file))
+                  {
+                      string line;
+                      while ((line = sr.ReadLine()) != null)
+                      {
+                          Console.WriteLine(line);
+                      }
+                  }
+              });
+            
+            writeTh.Start();readTh.Start();
+            
+        }
+
+（三）
+string[] strs = {"古藤老树昏鸦，","小桥流水人家，","古道西风瘦马。"
+                    ,"夕阳西下，","断肠人在天涯。"};
+            var aeList = new List<AutoResetEvent>();
+            var ns = new List<int>();int nLen = 0;
+            foreach(var str in strs)
+            {
+                ns.Add(nLen);nLen += str.Length * 3;
+                aeList.Add(new AutoResetEvent(false));
+            }
+            var aeArr = aeList.ToArray();
+            string songFile = @"D:\homeDir\songci.txt";
+            File.Delete(songFile);
+            for(int k=0;k<aeArr.Length;k++)
+            {
+                {
+                    Thread songTh = new Thread(p =>
+                      {
+                          int i = (int)p; Thread.Sleep(100);
+                          using (FileStream fs = new FileStream(songFile,
+                              FileMode.OpenOrCreate, FileAccess.Write,
+                              FileShare.Write))
+                          {
+                              fs.Seek(ns[i], SeekOrigin.Begin);
+                              var buffer = Encoding.UTF8.GetBytes(strs[i]);
+                              fs.Write(buffer);
+                          }
+                          aeArr[i].Set();
+                      });
+                    songTh.Start(k);
+
+
+                }
+            }
+            Console.WriteLine("天净沙·秋思");
+            WaitHandle.WaitAll(aeArr);
+            using(StreamReader sr=new StreamReader(songFile))
+            {
+                string t = sr.ReadToEnd();
+                Console.WriteLine(t);
+            }
+
+
+

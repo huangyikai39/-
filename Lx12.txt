@@ -1,0 +1,138 @@
+C#企业级开发技术练习12答题卡
+
+班级：     信管一班	
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.IO;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        static void Main(string[] args)
+        {
+         using(MemoryStream mst=new MemoryStream())
+            {
+                byte[] buffer = { 74, 97, 118, 97, 83, 99, 114, 105, 112, 116 };
+                foreach(int b in buffer)
+                {
+                    Console.Write((char)b);
+                }
+                Console.WriteLine();
+                mst.Write(buffer);
+                mst.Seek(-6, SeekOrigin.End);
+                int r=-1;
+                while ((r=mst.ReadByte())!= -1)
+                {
+                    Console.Write((char)r);
+                }
+                Console.WriteLine();
+                mst.Position =2;
+                byte[] bf = new byte[5];
+                mst.Read(bf);
+                Console.WriteLine(BitConverter.ToString(bf));
+            }
+
+        }
+    }
+}
+
+（二）
+using System;
+using System.IO;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        static void Main(string[] args)
+        {
+            DirectoryInfo di = new DirectoryInfo(@"d:\homeDir");
+            di.Create();
+            string file1 = @"d:\homeDir\homeWork4.txt";
+            string file2 = @"d:\homeDir\homeWork5.txt";
+            using(FileStream fs=new FileStream(file1,FileMode.OpenOrCreate))
+            {
+                byte[] bf = { 46, 78, 69, 84, 32, 67, 111, 114, 101 };
+                fs.Write(bf);
+            }
+            using(StreamWriter sw=new StreamWriter(file2))
+            {
+                sw.WriteLine("name:zhang");
+                sw.Write("age:");
+                sw.WriteLine(20);
+            }
+            foreach(var f in di.EnumerateFiles())
+            {
+                using(StreamReader srd=new StreamReader(f.FullName))
+                {
+                    string str = null;
+                    while ((str = srd.ReadLine()) != null)
+                    {
+                        Console.WriteLine(str);
+                    }
+                }
+            }
+        }
+    }
+}
+
+（三）
+using System;
+using System.IO;
+using System.IO.Compression;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        static void Main(string[] args)
+        {
+            string dir = @"d:\homeDir\";
+            string file1 = "homeWork4.txt"; string fi1e2 = "homeWork5.txt";
+            string zipFile = "homeZip.zip"; string zipDir = dir + "homeZip" ;
+            using (FileStream fs = File.Create(dir + zipFile))
+            {
+              using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Create))
+                {
+                   zip.CreateEntryFromFile(dir + file1, file1);
+                   zip.CreateEntryFromFile(dir + fi1e2, fi1e2);
+                }
+            }
+            using (FileStream fs = File.OpenRead(dir + zipFile))
+            {
+                using (ZipArchive zip = new ZipArchive(fs))
+                {
+                    Directory.CreateDirectory(zipDir);
+                    foreach (ZipArchiveEntry et in zip.Entries)
+                    {
+                        using (Stream stm = et.Open())
+                        {
+                            using (FileStream fstm=File.Create($@"{zipDir}\{et.Name}"))
+                            {
+                                stm.CopyTo(fstm);
+                            }
+                        }
+                    }
+                }
+            }      
+        }
+    }
+}
+
+
+

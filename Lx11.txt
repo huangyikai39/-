@@ -1,0 +1,60 @@
+﻿C#企业级开发技术练习11答题卡
+
+班级：   计算机信息管理1班
+姓名：   黄奕凯
+学号：   20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+class Employee
+        {
+            public int? id { get; set; }
+            public decimal? pay { get; set; }
+            public string eName { get; set; }
+            public void Deconstruct(out int? a, out string b, out decimal? c)
+            {
+                (a, b, c) = (id, eName, pay);
+            }
+        }
+        static void Main(string[] args)
+        {
+            Employee[] emps =
+            {
+                new Employee{pay = 9200, id = 201010,eName= "wang"},
+                new Employee{pay = 9654.32m, id = 201011,eName= "zhang"}
+            };
+            foreach (var emp in emps)
+            {
+                var (employeeId, employeeName, employeePay) = emp;
+                Console.WriteLine($"{employeeName}({employeeId})工资:{employeePay}");
+            }
+
+（二）
+static void Main(string[] args)
+        {
+            Directory.CreateDirectory(@"d:\homeDir");
+            string homeFile = @"d:\homeDir\Homework.txt";
+            File.AppendAllLines(homeFile, new[] { "登鹤雀楼", "唐代：王之涣" });
+            File.AppendAllText(homeFile, "白日依山尽，\r\n");
+            File.AppendAllLines(homeFile, new[] { "黄河入海流。", "欲穷千里目，" });
+            File.AppendAllText(homeFile, "更上一层楼。");
+        }
+
+（三）
+static void Main(string[] args)
+        {
+            DirectoryInfo di = new DirectoryInfo(@"d:\homeDir");
+            if (!di.Exists)
+                di.Create();
+                File.Delete(@"d:\homeDir\Homework2.txt");
+                FileInfo fi = new FileInfo(@"d:\homeDir\Homework1.txt");
+                using (var homeFile = fi.Create())
+                {
+                    byte[] buffer = new byte[] { 72, 101, 108, 108, 111, 33 };
+                    homeFile.Write(buffer);
+                }
+                fi.MoveTo(@"d:\homeDir\Homework2.txt");
+        }
+
+

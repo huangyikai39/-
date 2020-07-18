@@ -1,0 +1,97 @@
+C#企业级开发技术练习8答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Collections.Generic;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        
+        static void Main(string[] args)
+        {
+            LinkedList<float> kset = new LinkedList<float>();
+            kset.AddFirst(12.3f);
+            kset.AddFirst(42.5f);
+            kset.AddLast(9f);
+            kset.AddLast(7.2f);
+            kset.AddAfter(kset.Find(12.3f), 8.6f);
+            var node1 = kset.Find(12.3f);
+            var node2 = node1.Next;
+            kset.Remove(node2);
+            kset.AddBefore(node1, node2.Value);
+            foreach (float n in kset)
+                Console.WriteLine(n);
+        }
+    }
+}
+
+（二）
+using System;
+using System.Collections.Generic;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     class Dorder<T>:IComparer<T>where T:IComparable
+        {
+            public int Compare(T m, T n) => n.CompareTo(m);
+        }
+        
+        static void Main(string[] args)
+        {
+            SortedSet<long> order1 = new SortedSet<long> (new Dorder<long>()) { 15, 8, 45, 6 };
+            foreach (long i in order1) Console.WriteLine(i);
+            SortedSet<string> order2 = new SortedSet<string>(new Dorder<string>()) { "jsp", "asp", "php" };
+            foreach (string i in order2) Console.WriteLine(i);
+            SortedSet<DateTime> order3 = new SortedSet<DateTime>(new Dorder<DateTime>())
+            {new DateTime(2012,5,6),new DateTime(2011,5,6),new DateTime(2013,5,6)  };
+            foreach (DateTime i in order3) Console.WriteLine(i);
+        }
+    }
+}
+
+
+（三）
+using System;
+using System.Collections.Generic;
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        static void Main(string[] args)
+        {
+            IEnumerable<decimal> Pass(List<decimal>scores)
+            {
+              foreach (decimal sc in scores)
+                {
+                    if(sc>60)yield return sc;
+                }
+            }
+            List<decimal> scSet = new List<decimal> { 80.5m, 56m, 71m, 70.5m, 49m };
+            IEnumerable<decimal> passset = Pass(scSet);
+            Console.WriteLine("以下成绩合格");
+            foreach(decimal n in passset)
+            {
+                Console.WriteLine(n);
+            }
+        }
+    }
+}

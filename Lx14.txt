@@ -1,0 +1,118 @@
+C#企业级开发技术练习14答题卡
+
+班级：  信息管理1班   
+姓名：   黄奕凯
+学号：   20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Stack<int> stk = new Stack<int>();
+            int[] arr = { 20, 19, 22, 21, 98, 79, 26 };
+            foreach (int a in arr)
+                stk.Push(a);
+            Task tk()
+            {
+                return Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        lock (stk)
+                        {
+                            if (stk.Count == 0) break;
+                            var id = Thread.CurrentThread.ManagedThreadId;
+                            Thread.Sleep(1000);
+                            var r = stk.Pop();
+                            Console.WriteLine($"进程{id}删除元素{r},剩余{stk.Count}个");
+                        }
+                    }
+                });
+            }
+            Task[] tsk = new Task[5];
+            {
+                for (int n = 0; n < 5; n++)
+                {
+                    tsk[n] = tk();
+                }
+                tsk[4].Wait();
+                Console.WriteLine("end");
+            }
+        }
+    }
+}
+（二）
+using System;
+using System.Threading.Tasks;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            decimal Tax((decimal,decimal)Pay)
+            {
+                Task<decimal> payTk = new Task<decimal>(s =>
+                {
+                    var pay=((decimal pay, decimal deduct))s;
+                    return pay.pay - pay.deduct;
+                }, Pay);
+                payTk.Start();
+                var paytk = payTk.ContinueWith(t => t.Result - 5000)
+                       .ContinueWith(t => t.Result * 0.03m);
+                if (paytk.Result < 0) return 0;
+                else return paytk.Result;
+            };
+            (decimal pay, decimal deduct)[]Pays ={ (5000,1000),(8000,0),(10000,3000)};
+            foreach (var pay in Pays)
+            {
+                Console.WriteLine($"工资{pay.pay}附加扣除{pay.deduct}，所得税{Tax(pay)}");
+            }
+        }
+    }
+}
+
+（三）
+using System;
+using System.Threading.Tasks;
+using System.IO;
+using System.Collections.Generic;
+using System.Threading;
+namespace ConsoleApp1
+{
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            List<string> paFiles = new List<string>();
+            for (int i = 0; i < 10; i++)
+                paFiles.Add("paFile" + i.ToString());
+            Random rand = new Random();
+            Parallel.ForEach(paFiles, new ParallelOptions() { MaxDegreeOfParallelism = 3 }, pafile =>
+            {
+                var id = Thread.CurrentThread.ManagedThreadId;
+                Console.WriteLine($"线程{id}开始写入{pafile}");
+                int len = rand.Next(1, 1000);
+                byte[] txt = new byte[len];
+                rand.NextBytes(txt);
+                using (FileStream fs = new FileStream(pafile, FileMode.Create))
+                {
+                    fs.Write(txt);
+                }
+                Console.WriteLine($"线程{id}写入{pafile},{len}字节");
+            });
+        }
+    }
+}
+
+

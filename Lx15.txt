@@ -1,0 +1,116 @@
+C#企业级开发技术练习15答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+     
+        static Task<decimal> Sale(decimal price,int num)
+        {
+            var data = (price, num);
+            Task<decimal> tk = new Task<decimal>(t =>
+               {
+                   var (p, n) = ((decimal, int))t;
+                   return p * n;
+               }, data);
+            tk.Start();return tk;  
+        }
+        static async void Calc(decimal price, int num)
+        {
+            decimal r = await Sale(price, num);
+            Console.WriteLine($"单价：{price},数量:{num},商品金额：{r}");
+        }
+        static void Main(string[] args)
+        {
+            decimal price = 20.88m;
+            int num = 5;
+            Calc(price, num);
+            Console.WriteLine($"正在计算单价：{price},数量：{num}的商品金额");
+        }
+    }
+}
+
+（二）
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+
+namespace 作业
+{
+
+    
+    class Program
+    {
+
+        static  AsyncLocal<(double, int)> runnum = new AsyncLocal<(double, int)>();
+        static Task Calc()
+        {
+            return Task.Run(() =>
+            {
+                runnum.Value = (0.1, 3);
+                var a = runnum.Value.Item1;
+                var b = runnum.Value.Item2;
+                Console.WriteLine($"{a}的{b}次方是{Math.Pow(a, b)}");
+            });
+        }
+         
+        static async Task Main(string[] args)
+        {
+            runnum.Value = (0.2, 4);
+            await Calc();
+             var a = runnum.Value.Item1;
+              var b = runnum.Value.Item2;
+                Console.WriteLine($"{a}的{b}次方是{Math.Pow(a, b)}");
+        }
+    }
+}
+
+（三）
+using System;
+using System.Reflection;
+
+
+namespace 作业
+{
+    public class Student
+    {
+        public string name;
+        public static int num;
+        public Student() { num++; }
+        public DateTime birth { get; set; }
+        public int age() { return DateTime.Now.Year - birth.Year; }
+        public static int getCount() { return num; }
+    }
+    
+    class Program
+    {
+        
+         
+        static void Main(string[] args)
+        {
+         foreach(MemberInfo member  in typeof(Student).GetMembers())
+            {
+                Console.Write($"成员{member.Name}的类型是");
+                Console.WriteLine($"{member.MemberType}");
+            }
+        }
+    }
+}
+
+
+

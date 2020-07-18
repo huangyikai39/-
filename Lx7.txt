@@ -1,0 +1,117 @@
+C#企业级开发技术练习7答题卡
+
+班级：     信管一班
+姓名：    黄奕凯 
+学号：    20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Collections.Generic;
+
+namespace zuoye1
+{
+    class Program
+    {
+        static K CalcAvg<K>(List<K> a) where K : struct
+        {
+            double s = 0;
+            foreach (K i in a)
+            {
+                s += double.Parse(i.ToString());
+            }
+            s = s / a.Count;
+            return (K)Convert.ChangeType(s, typeof(K));
+            
+        }
+        static void Main(string[] args)
+        {
+            List<float> x = new List<float>();
+            x.Add(23f);
+            x.AddRange(new[] { 12f, 15f, 20f });
+            Console.WriteLine(CalcAvg(x));
+            List<decimal> y = new List<decimal>();
+            y.AddRange(new[] { 2.3M, 4.5M, 6.3M });
+            Console.WriteLine(CalcAvg(y));
+
+
+        }
+    }
+}
+
+（二）
+using System;
+
+namespace zuoye2
+{
+    class Program
+    {
+        enum Major
+        { 
+            计算机应用技术 = 610201,
+            计算机网络技术,
+            计算机信息管理,
+            软件技术 = 610205,
+            软件与信息服务
+        }
+        static (int, string) GetInfo<K>(K m)
+        {
+            int majorID = Convert.ToInt32(m);
+            string majorName = Enum.GetName(typeof(K),m);
+            return (majorID, majorName);
+        }
+        static void Main(string[] args)
+        {
+            (int id, string name) r1 = GetInfo<Major>((Major)610203);
+            Console.WriteLine($"{r1.name}({r1.id})");
+            (int id, string name) r2 = GetInfo<Major>((Major)610206);
+            Console.WriteLine($"{r2.name}({r2.id})");
+        }
+    }
+}
+
+
+（三）
+
+using System;
+
+namespace ConsoleApp3
+{
+    class Program
+    {
+        delegate R SortArr<in T, in S, out R>(T x, S y);
+        delegate void OutResult<in K>(K x);
+        static void Main(string[] args)
+        {
+            SortArr<int[], string, int[]> result = (m, s) =>
+            {
+                if (s == "desc")
+                {
+                    Array.Sort(m, (x, y) => y - x);
+                }
+                if (s == "asc")
+                {
+                    Array.Sort(m, (x, y) => x - y);
+                }
+                return m;
+            };
+            OutResult<int[]> outR = p =>
+            {
+                string s = string.Join(',', p);
+                Console.WriteLine(s);
+            };
+            int[] arr = { 27, 46, 36, 12 };
+            Console.WriteLine("不排序");
+            int[] r3 = result(arr, "nosort");
+            outR(r3);
+            Console.WriteLine("升序");
+            int[] r1 = result(arr, "asc");
+            outR(r1);
+            Console.WriteLine("倒序");
+            int[] r2 = result(arr, "decs");
+            outR(r2);
+        }
+    }
+}
+

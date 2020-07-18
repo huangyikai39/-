@@ -1,0 +1,112 @@
+C#企业级开发技术练习4答题卡
+
+班级：     信管一班
+姓名：    黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Numerics;
+
+namespace 作业
+{
+
+    class Program
+    {
+        static BigInteger TotalMul(long begin, long over)
+        {
+            BigInteger r = 1;
+            for (long i = begin; i <= over; i++)
+            {
+
+                r *= i;
+                i++;
+                i++;
+            }
+            return r;
+
+        }
+        static void Main(string[] args)
+        {
+            Func<long, long, BigInteger> TotalM = TotalMul;
+            Console.WriteLine(TotalM(11, 23));
+        }
+    }
+}
+
+（二）
+using System;
+using System.Linq;
+
+namespace 作业
+{
+    delegate decimal TotalCalc(decimal[] x);
+   
+    class Program
+    {
+        static void TotalC(string strC,decimal[] a,TotalCalc funC)
+        {
+            Console.WriteLine($"{strC}:{funC(a)}");
+        }
+            
+       
+        static void Main(string[] args)
+        {
+            decimal[] scs = { 80, 72, 91, 52, 65 };
+            TotalC("最大值：", scs, delegate (decimal[] a)
+            {
+                return a.Max();
+            });
+            TotalC("最小值：",scs, delegate (decimal[] a)
+             {
+                 return a.Min();
+             });
+        }
+    }
+}
+
+（三）
+        static void Main(string[] args)
+        {
+            Action<DateTime, int> DateChange = (t,d)=>
+                Console.WriteLine($"{t.ToLongDateString()}" +
+                $"{d}天之前是{t.AddDays(-d).ToLongDateString()}");
+               DateChange(new DateTime(2020, 10, 2), 5);
+        }
+    }
+}
+
+
+（四）
+using System;
+using System.Linq;
+
+namespace 作业
+{
+  
+   
+    class Program
+    {
+        static void isPass(int[] scores,string info,Func<int[],int>funP)
+        {
+            int n = funP(scores);
+            Console.WriteLine($"{info}:{n}");
+        }
+        static void Main(string[] args)
+        {
+            int[] scs = { 90, 57, 62, 82, 39, 72 };
+            isPass(scs, "及格人数", s =>
+              {
+                  int i = 3;
+                  foreach(char c in s)
+                  {
+                      if (char.IsNumber(c)) i++;
+                  }
+                 
+                  return i;
+              });
+        }
+    }
+}

@@ -1,0 +1,71 @@
+C#企业级开发技术练习6答题卡
+
+班级：     信管一班
+姓名：     黄奕凯		
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+
+
+namespace 作业
+{
+   class Teacher<T>
+    {
+        public void field(string fieldName,T t)
+        {
+            Console.WriteLine($"{fieldName}:{t},类型是{t.GetType().Name}");
+        }
+    }
+    
+   
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            Teacher<string> tea1 = new Teacher<string>();
+            tea1.field("姓名", "zhao");
+            Teacher<Decimal> tea2 = new Teacher<decimal>();
+            tea2.field("工资", 8202.34M);
+            Teacher<Boolean> tea3 = new Teacher<Boolean>();
+            tea3.field("编制", false);
+            Teacher<Single> tea4 = new Teacher<Single>();
+            tea4.field("评价", 90.23F);
+            Teacher<DateTime> tea5 = new Teacher<DateTime>();
+            tea5.field("工作日期", DateTime.Parse("2001/8/31"));
+        }
+    }
+}
+
+（二）
+using System;
+
+namespace 作业
+{
+    interface IPay<P, Q>
+    {
+        void Log(P x, Q y);
+    }
+    class Employee<T> : IPay<T, string>
+    {
+        public void Log(T pay, string name) =>
+            Console.WriteLine($"{name}:{pay},类型是{pay.GetType().Name}");
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Employee<Int64> c1 = new Employee<Int64>();
+            c1.Log(3000,"年终奖" );
+            Employee<Decimal> c2 = new Employee<decimal>();
+            c2.Log( 54321.67M, "核增绩效");
+
+        }
+    }
+}
+
+
+

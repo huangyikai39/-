@@ -1,0 +1,77 @@
+C#企业级开发技术练习9答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Collections.Generic;
+
+namespace zuoye1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Dictionary<int, string> courses = new Dictionary<int, string>()
+            {
+                [5331034] = "javascript",
+                [5331095] = "linux",
+                [5331019] = "PHP"
+            };
+            int id = 5331034;string s = $"键{id}";
+            if (!courses.ContainsKey(id))
+            {
+                Console.WriteLine($"{s}不存在,下面添加");
+            }
+            else
+            {
+                Console.WriteLine($"{s}对应的值为{courses[id]}，下面修改");
+            }
+            courses[id]="html5";
+            Console.WriteLine("结果如下:");
+            foreach (var c in courses)
+            {
+                Console.WriteLine($"键:{c.Key},值:{c.Value}");
+            }
+        }
+    }
+}
+
+（二）
+using System;
+
+namespace zuoye2
+{
+
+    class NumString
+    {
+        string _num = "123";
+        public char this[int i]
+        {
+            set
+            {
+                _num = _num.PadRight(i + 1,'0');
+                _num = _num.Insert(i, value.ToString());
+                _num = _num.Remove(i + 1, 1);
+            }
+        }
+        public void outAll() => Console.WriteLine(_num);
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            NumString ns = new NumString();
+            ns[5] = '2';
+            ns[1] = '2';ns[2] = '5';ns[3] = '0';ns[4] = '0';
+            ns.outAll();
+        }
+    }
+}
+
+
+

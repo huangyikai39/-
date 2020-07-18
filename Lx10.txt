@@ -1,0 +1,85 @@
+C#企业级开发技术练习10答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：     20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+        (long, decimal, float) num = (110L, 220.2M, 330.3F);
+            Console.WriteLine(num);
+            num.Item2 = 440.4M;
+            Console.WriteLine($"修改后,{nameof(num.Item2)}:{num.Item2}");
+            var mix = ("abc", 12.45, 15, 'a');
+            Console.WriteLine(mix);
+            mix.Item4 = 'b';
+            Console.WriteLine($"修改后,{nameof(mix.Item4)}:{mix.Item4}");
+            (string name, string course, int score) grade = ("zhang","php",80);
+            Console.WriteLine(grade);
+            grade.score = 82;
+            Console.WriteLine($"修改后,{nameof(grade.score)}:{grade.score}");
+            var employee = (name: "wang", pay: 8765.43m, bonus: 5432.1m);
+            Console.WriteLine(employee);
+            employee.pay = 9876.54m;
+            Console.WriteLine($"修改后,{nameof(employee.pay)}:{employee.pay}");
+        }
+    }
+}
+
+
+（二）
+using System;
+using System.Linq;
+using System.Collections.Generic;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            (double cnt, decimal passCnt,decimal failCnt) Calc(List<decimal>score)
+            {
+                var c = score.Count();
+                var p = score.Count(q => q >= 60);
+                var f = score.Count(f => f <= 60);
+                return (c, p, f);
+            }
+            var r = Calc(new List<decimal> { 80m, 73.5m, 20m, 60.5m,59.5m });
+            Console.WriteLine(r);
+            Console.WriteLine($"人数:{r.cnt},及格人数:{r.passCnt},不及格人数:{r.failCnt}");
+        }
+    }
+}
+
+（三）
+
+static void Main(string[] args)
+        {
+            (int count,T max) Calc<T>(params T[] num) where T : IComparable
+            {
+                var n = num.Length;
+                if (n == 0) return (n, default(T)); ;
+                var max = (num[0]);
+                foreach (var i in num)
+                {
+                    if (i.CompareTo(max) > 0) max = i;
+                 }
+                return (n, max);
+            }
+            var r1 = Calc(3.5f,4.3f,6.2f,1.7f,5.6f);
+            Console.WriteLine($"元素个数:{r1.count},最大值:{r1.max}");
+            var r2 = Calc('a','f','z','x');
+            Console.WriteLine($"元素个数:{r2.count},最大值:{r2.max}");
+            }
+
+
+

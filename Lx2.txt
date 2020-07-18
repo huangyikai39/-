@@ -1,0 +1,56 @@
+C#企业级开发技术练习2答题卡
+
+班级：     信管一班
+姓名：     黄奕凯
+学号：    20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+
+namespace 作业
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string[] languages = { "javascrjpt", ".net", "ecmascript", "golang", "java" };
+            int a = 96;
+            foreach (string c in languages)
+            {
+                Console.Write(c.PadRight(11, '&'));
+                {
+                    a++.ToString(); 
+                  Console.WriteLine($"{a++.ToString().PadLeft(5, '*')}");
+                }
+               
+            }
+        }
+
+（二）
+using System;
+
+namespace 作业
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string lgs = "javascript,.net,ecmascript,golang,java";
+            Console.WriteLine("程序语言：");
+            string[] r = lgs.Split(',');
+            foreach (string s in r)
+            {
+                Console.WriteLine(s);
+            }
+                int a = 0, b = 0, c = 0;
+            foreach(string s in r)
+            {
+                if (s.Contains("a"))a++ ;
+                if (s.StartsWith("j"))b++ ;
+                if (s.EndsWith("t"))c++ ;
+            }
+            Console.WriteLine("其中：");
+            Console.WriteLine($"包含a:{a}门,j开头:{b}门,t结尾:{c}门");
+        }

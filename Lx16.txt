@@ -1,0 +1,140 @@
+﻿C#企业级开发技术练习16答题卡
+
+班级：信息信管1班     
+姓名：黄奕凯 
+学号：20170307232
+
+注：请将答案放置在序号下方。*/
+
+（一）
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+namespace ConsoleApp16
+{
+class Program
+{
+public class ConditionAttribute : Attribute { }
+public class Employee
+{
+[Condition]
+public string eid { get; set; }
+public string name { get; set; }
+public int age { get; set; }
+}
+public class Participate
+{
+[Condition]
+public string eid { get; set; }
+[Condition]
+public string pid { get; set; }
+public decimal wages { get; set; }
+public decimal joinDate { get; set; }
+}
+static void Main(string[] args)
+{
+void genSql<T>()
+{
+List<string> updates = new List<string>();
+List<string> conditions = new List<string>();
+foreach (var p in typeof(T).GetProperties())
+{
+if (p.GetCustomAttribute<ConditionAttribute>() == null)
+updates.Add($"{p.Name}=@{p.Name}");
+else conditions.Add($"{p.Name}=@{p.Name}");
+}
+string sql = $"update {typeof(T).Name} set {string.Join(',', updates)}" + 
+$" where {string.Join(" and ", conditions)}";
+Console.WriteLine(sql);
+}
+genSql<Employee>();
+genSql<Participate>();
+}
+}
+}
+
+
+（二）
+using System;
+
+namespace ConsoleApp16
+{
+class Program
+{
+public class Books
+{
+decimal _price; int _amount;
+public static decimal totalPrice;
+public decimal subTotalPrice { get { return _price * _amount; } }
+public Books()
+{
+_price = 100; _amount = 1;
+totalPrice += 100;
+}
+public Books(decimal price, int amount)
+{
+_price = price; _amount = amount;
+totalPrice += amount * price;
+}
+}
+static void Main(string[] args)
+{
+void Calc<T>(Type[] types, object[] obj)
+{
+var ci = typeof(T).GetConstructor(types);
+if (ci != null)
+{
+object book = ci.Invoke(obj);
+var p = typeof(Books).GetProperty("subTotalPrice");
+var subTotalPrice = p.GetValue(book);
+Console.WriteLine($"销售图书{subTotalPrice}元");
+}
+}
+Calc<Books>(Type.EmptyTypes, null);
+Calc<Books>(new[] { typeof(decimal), typeof(int) }, new object[] { 80m, 4 });
+var f = typeof(Books).GetField("totalPrice");
+var totalPrice = f.GetValue(null);
+Console.WriteLine($"累计销售图书{totalPrice}元");
+}
+}
+}
+
+（三）
+using System;
+namespace ConsoleApp16
+{
+class Program
+{
+public class Books
+{
+string _bookNmae; decimal _price; int _amount;
+decimal subTotalPrice { get { return _price * _amount; } }
+public static int totalAmount; public static decimal totalPrice;
+public Books(string bookNmae, decimal price, int amount)
+{
+_bookNmae = bookNmae; _price = price; _amount = amount;
+totalAmount += _amount;
+totalPrice += subTotalPrice;
+}
+public void outSub()
+{
+Console.WriteLine($"购买《{_bookNmae}》{_amount}本，合计{subTotalPrice}元");
+}
+public static void outToal(decimal disCount)
+{
+Console.WriteLine($"累计购买图书{totalAmount}本，累计{totalPrice}元");
+Console.WriteLine($"打{disCount * 10}折后，实收金额{totalPrice * disCount}元");
+}
+}
+static void Main(string[] args)
+{
+var book1 = new Books("数据库", 30.23m, 20);
+var book2 = new Books("C#", 40.5m, 10);
+var outsub = typeof(Books).GetMethod("outSub");
+outsub.Invoke(book1, null);
+outsub.Invoke(book2, null);
+var outtotal = typeof(Books).GetMethod("outToal");
+outtotal.Invoke(null, new object[] { 0.9m });
+}
+}
+}
